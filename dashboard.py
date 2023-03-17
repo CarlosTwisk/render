@@ -2,14 +2,6 @@ from dash import Dash, dcc, html, Input, Output
 import pandas as pd
 import plotly.express as px
 
-
-# mydataset = "https://raw.githubusercontent.com/plotly/datasets/master/volcano_db.csv"
-
-# df = pd.read_csv(mydataset, encoding="latin")
-# df.dropna(inplace=True)
-# df["Elev"] = abs(df["Elev"])
-
-
 df = pd.read_csv('new.csv')
 sum = pd.read_csv('sum.csv')
 
@@ -80,7 +72,7 @@ def sync_input(dropdown, amount, start_date, end_date):
     geld = sum[sum['Activiteit']==dropdown]['cost2'].values[0]
 
     text = (f'Voor de {dropdown.lower()} is in totaal {round(tijd,2)} uur nodig gehad en heeft €{round(geld,2)} gekost.')
-    text2 = (f'Bij een aantal van {amount} stuks komt dit neer op {round(tijd/amount,2)} met een koste per aantal van €{round(geld/amount,2)}')
+    text2 = (f'Bij een aantal van {amount} stuks komt dit neer op {round(tijd/amount,2)} uur met een koste per aantal van €{round(geld/amount,2)}')
 
 
 
@@ -97,9 +89,10 @@ def sync_input(dropdown, amount, start_date, end_date):
     fig.update_yaxes({"title":"Kosten [€]"})
     fig.update_layout(title = {"text":"Kosten gemaakt aan personeel per dag","x":0.5, "xanchor":"center"})
     
-    uur = dfp['tijd2'].sum()
+    uur = dfp.loc[(dfp['Activiteit']==dropdown)]['tijd2'].sum()
 
-    text3 = f'Vanaf {start_date} tot {end_date} is er {round(uur,2)} besteed aan {dropdown.lower()}'
+    print(start_date.date())
+    text3 = f'Vanaf {start_date.date()} tot {end_date.date()} is er {round(uur,2)} uur besteed aan {dropdown.lower()}'
     return fig, text, text2, text3
 
 
